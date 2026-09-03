@@ -55,7 +55,6 @@ jobs:
     steps:
       - name: Checkout source code
         uses: actions/checkout@v7
-      - run: |
-              sudo kubectl delete deployment --all              
-              sudo kubectl apply -f ${{ github.workspace }}/kubernetes/deployment.yaml --force
-              sudo kubectl apply -f ${{ github.workspace }}/kubernetes/nginx-service.yaml --force
+      - run: |           
+              sudo kubectl apply -f ${{ github.workspace }}/kubernetes/deployment.yaml
+              sudo kubectl apply -f ${{ github.workspace }}/kubernetes/nginx-service.yaml
