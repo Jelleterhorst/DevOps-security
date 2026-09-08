@@ -18,7 +18,7 @@ RUN useradd -u 201 -m serviceaccount-webserver
 RUN chown -R serviceaccount-webserver /app
 
 # Schakel over naar het service account
-USER serviceaccount-webserver
+USER 201
 
 # Start de applicatie
 CMD ["flask", "run", "-h", "0.0.0.0"]
