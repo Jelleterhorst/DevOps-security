@@ -8,29 +8,26 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends pipx \
     && rm -rf /var/lib/apt/lists/*
 
-# Install poetry
-RUN /usr/bin/pipx install poetry
+# Installeer poetry en zet virtual environments uit
+RUN pip install poetry
+RUN poetry config virtualenvs.create false
 
-# Copy only requirements to cache them in docker layer
-COPY /content/pyproject.toml /content/poetry.lock /app/
+# Kopieer je configuratie en installeer dependencies (gaat altijd goed als root)
+COPY pyproject.toml poetry.lock ./
+RUN poetry install --no-interaction --no-ansi --no-root
 
-# Project initialization
-RUN /root/.local/bin/poetry install --no-interaction --no-ansi --no-root
+# Kopieer de rest van je project
+COPY . .
 
-# Maak een nieuwe gebruiker aan met de naam 'appuser' en geef deze geen wachtwoord of home folder nodig.
+# Maak het service account aan en geef rechten op de map
 RUN useradd -m serviceaccount-webserver
-
-# Zorg dat 'appuser' de eigenaar is van de bestanden in de werkdirectory (belangrijk!)
 RUN chown -R serviceaccount-webserver /app
 
-# Schakel over naar deze nieuwe gebruiker
+# Schakel over naar het service account (dit maakt Kubernetes blij)
 USER serviceaccount-webserver
 
-# Copying the project files into the container
-COPY /content/. /app/
+EXPOSE 5000
 
-# Expose webserver port
-# EXPOSE 5000
+# Start de applicatie
+CMD ["flask", "run", "-h", "0.0.0.0", "-p", "5000"]
 
-# Run the webserver
-CMD ["/root/.local/bin/poetry", "run", "flask", "run", "-h", "0.0.0.0"]
