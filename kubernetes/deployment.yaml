@@ -3,24 +3,28 @@ kind: Deployment
 metadata:
   name: devops-jelle
   labels:
-    app: quoterxp
+    app: webapp-jelle
 spec:
   replicas: 2
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: quoterxp
-  template:
+      app: webapp-jelle
     metadata:
       labels:
-        app: quoterxp
+        app: webapp-jelle
     spec:
       containers:
-      - name: quoterxp
+      - name: webapp-jelle
         image: jelleterhorst/devops-security:latest
         imagePullPolicy: Always
         ports:
           - containerPort: 5000
+        resources:
+          limits:
+            memory: "512Mi" 
+        securityContext:
+          runAsNonRoot: true
       imagePullSecrets:
         - name: docker-secret
