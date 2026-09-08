@@ -1,12 +1,6 @@
-# Use an official Python runtime as a parent image
-FROM python:3.12-slim-bookworm
+FROM python:3.12-slim
 
-# Set work directory in the container
 WORKDIR /app
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends pipx \
-    && rm -rf /var/lib/apt/lists/*
 
 # Installeer poetry en zet virtual environments uit
 RUN pip install poetry
@@ -30,4 +24,3 @@ EXPOSE 5000
 
 # Start de applicatie
 CMD ["flask", "run", "-h", "0.0.0.0", "-p", "5000"]
-
