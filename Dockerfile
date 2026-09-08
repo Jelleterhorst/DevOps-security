@@ -13,8 +13,8 @@ RUN poetry install --no-interaction --no-ansi --no-root
 # Kopieer de rest van je project vanuit de 'content' map
 COPY content/ .
 
-# Maak het service account aan en geef rechten op de map
-RUN useradd -m serviceaccount-webserver
+# Maak het service account aan en geef rechten op de map (201 heb ik gedaan aangezien k3s anders neit niet zeker weet of t root is of niet)
+RUN useradd -u 201 -m serviceaccount-webserver
 RUN chown -R serviceaccount-webserver /app
 
 # Schakel over naar het service account
