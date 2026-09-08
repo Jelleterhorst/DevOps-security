@@ -17,6 +17,15 @@ COPY /content/pyproject.toml /content/poetry.lock /app/
 # Project initialization
 RUN /root/.local/bin/poetry install --no-interaction --no-ansi --no-root
 
+# Maak een nieuwe gebruiker aan met de naam 'appuser' en geef deze geen wachtwoord of home folder nodig.
+RUN useradd -m serviceaccount-webserver
+
+# Zorg dat 'appuser' de eigenaar is van de bestanden in de werkdirectory (belangrijk!)
+RUN chown -R serviceaccount-webserver /app
+
+# Schakel over naar deze nieuwe gebruiker
+USER serviceaccount-webserver
+
 # Copying the project files into the container
 COPY /content/. /app/
 
