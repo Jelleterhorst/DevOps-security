@@ -50,7 +50,7 @@ jobs:
           ignore-base: false
           ignore-unchanged: false
           write-comment: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.DOCKER_SCOUT_TOKEN }}
           exit-code: true
           exit-on: vulnerability
 
