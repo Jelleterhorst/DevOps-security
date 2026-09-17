@@ -24,7 +24,7 @@ spec:
           - containerPort: 5000
         resources:
           limits:
-            memory: "1024Mi" 
+            memory: "2048Mi" 
         securityContext:
           runAsNonRoot: true
       imagePullSecrets:
