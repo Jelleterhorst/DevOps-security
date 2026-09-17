@@ -22,9 +22,9 @@ spec:
         imagePullPolicy: Always
         ports:
           - containerPort: 5000
-        resources:
-          limits:
-            memory: "2048Mi" 
+      #  resources:
+         # limits:
+           # memory: "2048Mi" 
         securityContext:
           runAsNonRoot: true
       imagePullSecrets:
