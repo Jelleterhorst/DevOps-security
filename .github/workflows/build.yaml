@@ -50,6 +50,7 @@ jobs:
           ignore-unchanged: false
           write-comment: true
           github-token: ${{ secrets.DOCKER_SCOUT_TOKEN }}
+#hoi jelle onderstaande 2 commends weghalen als je wilt dat de pipeline stopt bij een vulnerability. laat dit aan denk zien en dan comment weer terug zetten          
           #exit-code: true
           #exit-on: vulnerability
 
@@ -84,3 +85,16 @@ jobs:
               sudo kubectl apply -f ${{ github.workspace }}/kubernetes/deployment.yaml
               sudo kubectl apply -f ${{ github.workspace }}/kubernetes/nginx-service.yaml
               sudo kubectl rollout restart deployment devops-jelle
+  postman:
+    name: Postman test
+    needs: [ Deploy ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Postman CLI
+        run: |
+          curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+      - name: Login to Postman CLI
+        run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
+      - name: Run API tests
+        run: |
+          postman collection run <JOUW-COLLECTION-ID-UIT-POSTMAN>
