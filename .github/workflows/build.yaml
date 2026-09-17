@@ -51,7 +51,7 @@ jobs:
           write-comment: true
           github-token: ${{ secrets.DOCKER_SCOUT_TOKEN }}
           exit-code: true
-          exit-on: vulnerability
+          #exit-on: vulnerability
 
   test:
     name: Test
