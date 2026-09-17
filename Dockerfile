@@ -21,4 +21,4 @@ RUN chown -R serviceaccount-webserver /app
 USER 201
 
 # Start de applicatie
-CMD ["flask", "run", "-h", "0.0.0.0"]
+CMD ["gunicorn", "--workers", "4", "--bind", "0.0.0.0:5000", "app:app"]
