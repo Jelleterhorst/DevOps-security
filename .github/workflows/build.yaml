@@ -39,11 +39,10 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_LOGIN }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-          
       - name: Docker Scout CVE
         uses: docker/scout-action@v1.24.0
         with:
-          command: cve
+          command: cves
           image: jelleterhorst/devops-security:latest
           only-fixed: true
           only-severities: critical, high
