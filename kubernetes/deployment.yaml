@@ -26,6 +26,6 @@ spec:
           limits:
             memory: "2048Mi" 
         securityContext:
-          runAsNonRoot: false
+          runAsNonRoot: true
       imagePullSecrets:
         - name: docker-secret

@@ -19,7 +19,7 @@ RUN useradd -u 201 -m serviceaccount-webserver
 RUN chown -R serviceaccount-webserver /app
 
 # Schakel over naar het service account
-#USER 201
+USER 201
 
 # Start de applicatie
 CMD ["gunicorn", "--workers", "2", "--threads", "4", "--keep-alive", "0", "--bind", "0.0.0.0:5000", "app:app"]
