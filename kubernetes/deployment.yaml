@@ -5,7 +5,7 @@ metadata:
   labels:
     app: webapp-jelle
 spec:
-  replicas: 1
+  replicas: 2
   strategy:
     type: Recreate
   selector:
@@ -26,6 +26,6 @@ spec:
           limits:
             memory: "2048Mi" 
         securityContext:
-          runAsNonRoot: true
+          runAsNonRoot: false
       imagePullSecrets:
         - name: docker-secret
