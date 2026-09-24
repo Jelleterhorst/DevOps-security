@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: webapp-jelle
-        image: jelleterhorst/devops-security:latest
+        image: stensel8/devops-security:latest
         imagePullPolicy: Always
         ports:
           - containerPort: 5000
