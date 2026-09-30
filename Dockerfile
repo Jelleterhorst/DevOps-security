@@ -1,36 +1,25 @@
-# Use an official Python runtime as a parent image
-FROM python:3.11-slim-bookworm
+FROM python:3.12-slim-bookworm
 
-# Set work directory in the container
 WORKDIR /app
 
-# Set environment variables for Python and Poetry
-# VIRTUALENVS_CREATE=false tells Poetry to install packages globally to the system python
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    POETRY_VIRTUALENVS_CREATE=false \
-    POETRY_VERSION=1.8.2 
+# Installeer poetry en zet virtual environments uit
+RUN pip install poetry
+RUN poetry config virtualenvs.create false
 
-# Install system dependencies
-# Added `build-essential` which includes gcc (required to build many Python packages)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install poetry (pipx is unnecessary inside an already isolated Docker container)
-RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
-
-# Copy only requirements to cache them in docker layer
-COPY /content/pyproject.toml /content/poetry.lock /app/
-
-# Project initialization
+# Kopieer je configuratie vanuit de 'content' map en installeer dependencies
+COPY content/pyproject.toml content/poetry.lock ./
+RUN poetry lock
 RUN poetry install --no-interaction --no-ansi --no-root
 
-# Copying the project files into the container
-COPY /content/. /app/
+# Kopieer de rest van je project vanuit de 'content' map
+COPY content/ .
 
-# Expose webserver port
-EXPOSE 5000
+# Maak het service account aan en geef rechten op de map (201 heb ik gedaan aangezien k3s anders neit niet zeker weet of t root is of niet)
+RUN useradd -u 201 -m serviceaccount-webserver
+RUN chown -R serviceaccount-webserver /app
 
-# Run the webserver (no longer requires `poetry run` because packages are installed system-wide)
-CMD ["flask", "run", "-h", "0.0.0.0", "-p", "5000"]
+# Schakel over naar het service account
+USER 201
+
+# Start de applicatie
+CMD ["gunicorn", "--workers", "2", "--threads", "4", "--keep-alive", "0", "--bind", "0.0.0.0:5000", "app:app"]
