@@ -1,25 +1,27 @@
+# Use an official Python runtime as a parent image
 FROM python:3.12-slim-bookworm
 
+# Set work directory in the container
 WORKDIR /app
 
-# Installeer poetry en zet virtual environments uit
-RUN pip install poetry
-RUN poetry config virtualenvs.create false
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends pipx \
+    && rm -rf /var/lib/apt/lists/*
 
-# Kopieer je configuratie vanuit de 'content' map en installeer dependencies
-COPY content/pyproject.toml content/poetry.lock ./
-RUN poetry lock
-RUN poetry install --no-interaction --no-ansi --no-root
+# Install poetry
+RUN /usr/bin/pipx install poetry
 
-# Kopieer de rest van je project vanuit de 'content' map
-COPY content/ .
+# Copy only requirements to cache them in docker layer
+COPY /content/pyproject.toml /content/poetry.lock /app/
 
-# Maak het service account aan en geef rechten op de map (201 heb ik gedaan aangezien k3s anders neit niet zeker weet of t root is of niet)
-#RUN useradd -u 201 -m serviceaccount-webserver
-#RUN chown -R serviceaccount-webserver /app
+# Project initialization
+RUN /root/.local/bin/poetry install --no-interaction --no-ansi --no-root
 
-# Schakel over naar het service account
-#USER 201
+# Copying the project files into the container
+COPY /content/. /app/
 
-# Start de applicatie
-CMD ["gunicorn", "--workers", "2", "--threads", "4", "--keep-alive", "0", "--bind", "0.0.0.0:5000", "app:app"]
+# Expose webserver port
+# EXPOSE 5000
+
+# Run the webserver
+CMD ["/root/.local/bin/poetry", "run", "flask", "run", "-h", "0.0.0.0"]
