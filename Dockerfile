@@ -15,11 +15,11 @@ RUN poetry install --no-interaction --no-ansi --no-root
 COPY content/ .
 
 # Maak het service account aan en geef rechten op de map (201 heb ik gedaan aangezien k3s anders neit niet zeker weet of t root is of niet)
-RUN useradd -u 201 -m serviceaccount-webserver
-RUN chown -R serviceaccount-webserver /app
+#RUN useradd -u 201 -m serviceaccount-webserver
+#RUN chown -R serviceaccount-webserver /app
 
 # Schakel over naar het service account
-USER 201
+#USER 201
 
 # Start de applicatie
 CMD ["gunicorn", "--workers", "2", "--threads", "4", "--keep-alive", "0", "--bind", "0.0.0.0:5000", "app:app"]

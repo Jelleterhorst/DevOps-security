@@ -22,10 +22,10 @@ spec:
         imagePullPolicy: Always
         ports:
           - containerPort: 5000
-        resources:
-          limits:
-            memory: "2048Mi" 
-        securityContext:
-          runAsNonRoot: true
+        #resources:
+          #limits:
+         #   memory: "2048Mi" 
+        #securityContext:
+         # runAsNonRoot: true
       imagePullSecrets:
         - name: docker-secret
