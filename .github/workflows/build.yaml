@@ -85,7 +85,7 @@ jobs:
               sudo kubectl delete deployment --all            
               sudo kubectl apply -f ${{ github.workspace }}/kubernetes/deployment.yaml --force
               sudo kubectl apply -f ${{ github.workspace }}/kubernetes/nginx-service.yaml --force
-              sudo kubectl rollout status deployment/devops-jelle --timeout=65s
+              sudo kubectl rollout status deployment/devops-jelle --timeout=45s
   postman:
     name: Postman test
     needs: [ Deploy ]
