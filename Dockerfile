@@ -14,12 +14,8 @@ RUN poetry install --no-interaction --no-ansi --no-root
 # Kopieer de rest van je project vanuit de 'content' map
 COPY content/ .
 
-# Maak het service account aan en geef rechten op de map (201 heb ik gedaan aangezien k3s anders neit niet zeker weet of t root is of niet)
-RUN useradd -u 201 -m serviceaccount-webserver
-RUN chown -R serviceaccount-webserver /app
-
-# Schakel over naar het service account
-USER 201
+# Schakel over naar het nonroot gebruiker
+USER nonroot:nonroot
 
 # Start de applicatie
 CMD ["gunicorn", "--workers", "2", "--threads", "4", "--keep-alive", "0", "--bind", "0.0.0.0:5000", "app:app"]
