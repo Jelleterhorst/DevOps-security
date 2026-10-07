@@ -18,6 +18,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: quoter-service
+            name: ngnix-service-jelle
             port:
               number: 5000
