@@ -1,20 +1,23 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: app-ingress
+  name: jelle-ingress
   annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   ingressClassName: nginx
   tls:
-  - secretName: app-tls-secret
+  - hosts:
+    - jelle.local
+    secretName: jelle-tls-secret
   rules:
-  - http:
+  - host: jelle.local
+    http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: ngnix-service-jelle
+            name: quoter-service
             port:
               number: 5000
